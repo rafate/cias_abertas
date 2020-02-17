@@ -57,10 +57,11 @@ function prc_insere_dfp($p_host,$p_banco,$p_usuario,$p_senha,$p_tabela)
 
 //========================================
 //echo $_FILES['csvdre']['tmp_name'];
+//$variavel = $_POST['nome_do_campo_hidden'];
 $host = "localhost";
 $banco = "cias_abertas";
-$usuario = "root";
-$senha = "";
+$usuario =  $_POST['login'];
+$senha = $_POST['senha'];
 prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_DRE");
 prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_BPA");
 prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_BPP");
