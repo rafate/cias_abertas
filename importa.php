@@ -1,5 +1,5 @@
 <?php
-
+$ano = 0;
 function prc_insere_dfp($p_host,$p_banco,$p_usuario,$p_senha,$p_tabela)
 {
 	$conexao = mysqli_connect($p_host, $p_usuario, $p_senha, $p_banco);
@@ -20,7 +20,9 @@ function prc_insere_dfp($p_host,$p_banco,$p_usuario,$p_senha,$p_tabela)
 					
 				    if ($ll != 1) {
 					
-					    if ($ll == 2) {							
+					    if ($ll == 2) {
+						    global $ano;
+							$ano = substr($linha[1],0,4);
 							$sql = "DELETE from $p_tabela WHERE Year(dt_refer) = ".substr($linha[1],0,4);							
 							$result = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
 						}
@@ -54,10 +56,22 @@ function prc_insere_dfp($p_host,$p_banco,$p_usuario,$p_senha,$p_tabela)
 
 }
 
-
+function prc_calcula_resumo($p_host,$p_banco,$p_usuario,$p_senha)
+{	
+	global $ano;
+		
+	$conexao = mysqli_connect($p_host, $p_usuario, $p_senha, $p_banco);
+	if($conexao)
+	{ 	   
+	   $sql = "CALL `prc_insere_dados_resumidos`($ano);";							
+	   $result = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+	  mysqli_close ($conexao);
+	  if ($result) echo "<br>Tabela dados_resumidos calculada com sucesso.";
+	} else {echo "nao foi possivel estabelecer uma conexao";} 
+	
+}
 //========================================
-//echo $_FILES['csvdre']['tmp_name'];
-//$variavel = $_POST['nome_do_campo_hidden'];
+
 $host = "localhost";
 $banco = "cias_abertas";
 $usuario =  $_POST['login'];
@@ -66,5 +80,6 @@ prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_DRE");
 prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_BPA");
 prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_BPP");
 prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_DFC");
+prc_calcula_resumo($host,$banco,$usuario,$senha);
 
 ?>
