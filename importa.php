@@ -59,21 +59,34 @@ function prc_insere_dfp($p_host,$p_banco,$p_usuario,$p_senha,$p_tabela)
 function prc_calcula_resumo($p_host,$p_banco,$p_usuario,$p_senha)
 {	
 	global $ano;
-		
+	$result	 = 0;
 	$conexao = mysqli_connect($p_host, $p_usuario, $p_senha, $p_banco);
 	if($conexao)
-	{ 	   
-	   $sql = "CALL `prc_insere_dados_resumidos`($ano);";							
-	   $result = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+	{ 	   	   
+	   $resultado = mysqli_query($conexao,"select distinct cd_cvm from dfp_dre where year(dt_refer) = $ano
+										   UNION
+										   select distinct cd_cvm from dfp_dfc where year(dt_refer) = $ano
+										   UNION
+										   select distinct cd_cvm from dfp_bpp where year(dt_refer) = $ano
+										   UNION
+										   select distinct cd_cvm from dfp_bpa where year(dt_refer) = $ano");
+      while($empresa = mysqli_fetch_assoc($resultado)){
+		  
+		$cd_cvm = $empresa['cd_cvm'];
+		$sql = "CALL `prc_insere_dados_resumidos`($ano, $cd_cvm);";							  
+		$result = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+		if (!$result) echo "Erro cd_cvm: ".$cd_cvm."<br>";
+      }	   	   	  
 	  mysqli_close ($conexao);
-	  if ($result) echo "<br>Tabela dados_resumidos calculada com sucesso.";
+	  if ($result) echo "<br>Tabela dados_resumidos calculada com sucesso.";	  
 	} else {echo "nao foi possivel estabelecer uma conexao";} 
 	
 }
 //========================================
+//$conexao = mysqli_connect('br46.hostgator.com.br','inves896_consult','-:,h:ldO','inves896_cias_abertas');
 
-$host = "localhost";
-$banco = "cias_abertas";
+$host = $_POST['host'];
+$banco = $_POST['banco'];
 $usuario =  $_POST['login'];
 $senha = $_POST['senha'];
 prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_DRE");
@@ -81,5 +94,4 @@ prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_BPA");
 prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_BPP");
 prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_DFC");
 prc_calcula_resumo($host,$banco,$usuario,$senha);
-
 ?>
