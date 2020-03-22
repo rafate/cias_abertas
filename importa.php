@@ -27,11 +27,11 @@ function prc_insere_dfp($p_host,$p_banco,$p_usuario,$p_senha,$p_tabela)
 							$result = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
 						}
 						
-					    if ($p_tabela == "DFP_DRE") {
+					    if ($p_tabela == "dfp_dre") {
 							$sql = "INSERT INTO $p_tabela (CNPJ_CIA, DT_REFER, VERSAO, DENOM_CIA, CD_CVM, GRUPO_DFP, ESCALA_DRE, ORDEM_EXERC, DT_INI_EXERC, DT_FIM_EXERC, CD_CONTA, DS_CONTA, VL_CONTA) 
 						        VALUES ('$linha[0]', '$linha[1]', '$linha[2]', '$linha[3]', '$linha[4]', '$linha[5]', '$linha[7]', '$linha[8]', '$linha[9]', '$linha[10]', '$linha[11]', '$linha[12]', '$linha[13]')";
 						}
-                        elseif ($p_tabela == "DFP_DFC") {
+                        elseif ($p_tabela == "dfp_dfc") {
 							$sql = "INSERT INTO $p_tabela (CNPJ_CIA, DT_REFER, VERSAO, DENOM_CIA, CD_CVM, GRUPO_DFP, MOEDA, ESCALA_MOEDA, ORDEM_EXERC, DT_INI_EXERC, DT_FIM_EXERC, CD_CONTA, DS_CONTA, VL_CONTA) 
 						        VALUES ('$linha[0]', '$linha[1]', '$linha[2]', '$linha[3]', '$linha[4]', '$linha[5]', '$linha[6]', '$linha[7]', '$linha[8]', '$linha[9]', '$linha[10]', '$linha[11]', '$linha[12]', '$linha[13]')";
 						}						
@@ -89,9 +89,9 @@ $host = $_POST['host'];
 $banco = $_POST['banco'];
 $usuario =  $_POST['login'];
 $senha = $_POST['senha'];
-prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_DRE");
-prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_BPA");
-prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_BPP");
-prc_insere_dfp($host,$banco,$usuario,$senha,"DFP_DFC");
+prc_insere_dfp($host,$banco,$usuario,$senha,"dfp_dre");
+prc_insere_dfp($host,$banco,$usuario,$senha,"dfp_bpa");
+prc_insere_dfp($host,$banco,$usuario,$senha,"dfp_bpp");
+prc_insere_dfp($host,$banco,$usuario,$senha,"dfp_dfc");
 prc_calcula_resumo($host,$banco,$usuario,$senha);
 ?>
